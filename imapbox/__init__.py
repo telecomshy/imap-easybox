@@ -1,2 +1,2 @@
-from .imap import ImapServer
+from .imap_server import ImapServer
 from .email import Mail
