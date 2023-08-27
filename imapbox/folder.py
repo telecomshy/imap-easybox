@@ -1,4 +1,3 @@
-import email
 from collections import UserList
 from .email import Mail
 

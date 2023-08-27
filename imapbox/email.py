@@ -1,4 +1,5 @@
 import email
+from email import generator
 from pathlib import Path
 from datetime import datetime
 from .utils import decode_mail_header, parse_raw_mail, image_to_base64
@@ -136,6 +137,20 @@ class Mail:
             pathes.append(str(filepath))
 
         return pathes
+
+    def save(self, filename=None):
+        """将邮件保存为eml文件"""
+        if filename is None:
+            filename = f"{self.mail_id}.eml"
+
+        filename = Path(filename)
+
+        if filename.suffix != '.eml':
+            raise ValueError("file suffix must be .eml")
+
+        with open(filename, 'wt') as eml:
+            gen = generator.Generator(eml)
+            gen.flatten(self.raw_mail)
 
     def __repr__(self):
         return f"Mail<{self.mail_id}>"

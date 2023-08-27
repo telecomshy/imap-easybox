@@ -2,8 +2,8 @@ import imaplib
 from .folder import Folder, FoldList
 
 
-class ImapServer:
-    def __init__(self, host, port, user=None, password=None, ssl=True, **kwargs):
+class MailBox:
+    def __init__(self, host, port=993, user=None, password=None, ssl=True, **kwargs):
         self.host = host
         self.port = port
         self.user = user
@@ -14,7 +14,7 @@ class ImapServer:
         self._folders = {}
 
     def login(self, user=None, password=None):
-        """登陆并获取所有文件夹"""
+        """登陆并获取所有文件夹名称"""
 
         if user is None:
             user = self.user
@@ -22,6 +22,9 @@ class ImapServer:
             password = self.password
 
         self.server = self.imap_cls(self.host, self.port, **self.kwargs)
+        # 登录成果返回('OK', [b'LOGIN completed'])
+        # 用户名密码错误抛出异常imaplib.IMAP4.error: b'LOGIN failure, invalid username/password'
+        # 邮箱地址错误抛出异常imaplib.IMAP4.error: LOGIN command error: BAD [b'LOGIN failure, domain is disable.']
         self.server.login(user, password)
         self._get_folders_name()
 
@@ -53,10 +56,12 @@ class ImapServer:
         return FoldList(Folder(self.server, folder_name) for folder_name in self._folders.keys())
 
     def _get_folders_name(self):
+        # list返回的结果是('OK', [b'(\\Marked) "/" "INBOX"', b'(\\Marked) "/" "&XfJT0ZAB-"'])
         resp, data = self.server.list()
-        # data是b'(\\Marked) "/" "&XfJSIJZk-"'字节字符串组成的列表
+
+        # 结果中类似&XfJT0ZAB-的字符串是utf7编码，并且把+号替换回&符号
         for folder_byte in data:
-            folder_name_byte = folder_byte.split(b' ')[-1].replace(b'"', b'')  # folder_name_byte结果为b"&XfJSIJZk-"
+            folder_name_byte = folder_byte.split(b' ')[-1].replace(b'"', b'')
             folder_key = folder_name_byte.replace(b"&", b"+").decode('utf7').lower()
             folder_val = folder_name_byte.decode('ascii')
             self._folders[folder_key] = folder_val
