@@ -29,7 +29,12 @@ class MailBox:
         self._get_folders_name()
 
     def quit(self):
-        self.server.close()
+        # 需要先选择select邮箱，然后再close，否则会抛出错误
+        try:
+            self.server.close()
+        except imaplib.IMAP4.error:
+            pass
+
         self.server.logout()
 
     def __getattr__(self, item):
@@ -40,11 +45,7 @@ class MailBox:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        try:
-            # 需要先选择select邮箱，然后再close，否则会抛出错误
-            self.quit()
-        except Exception:
-            pass
+        self.quit()
 
     def select(self, folder_name: str):
         folder_raw_name = self._folders[folder_name.lower()]
