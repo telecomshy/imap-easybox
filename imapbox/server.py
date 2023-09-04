@@ -11,6 +11,7 @@ class MailBox:
         self.imap_cls = getattr(imaplib, 'IMAP4_SSL') if ssl else getattr(imaplib, 'IMAP4')
         self.server = None
         self.kwargs = kwargs
+        # self._folders是邮箱中文名和原始名称构成的字典
         self._folders = {}
 
     def login(self, user=None, password=None):
@@ -26,7 +27,7 @@ class MailBox:
         # 用户名密码错误抛出异常imaplib.IMAP4.error: b'LOGIN failure, invalid username/password'
         # 邮箱地址错误抛出异常imaplib.IMAP4.error: LOGIN command error: BAD [b'LOGIN failure, domain is disable.']
         self.server.login(user, password)
-        self._get_folders_name()
+        self._update_folders()
 
     def quit(self):
         # 需要先选择select邮箱，然后再close，否则会抛出错误
@@ -47,16 +48,17 @@ class MailBox:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.quit()
 
-    def select(self, folder_name: str):
+    def select(self, folder_name: str) -> Folder:
         folder_raw_name = self._folders[folder_name.lower()]
         self.server.select(folder_raw_name)
         return Folder(self.server, folder_name)
 
     @property
-    def folders(self):
+    def folders(self) -> FoldList:
         return FoldList(Folder(self.server, folder_name) for folder_name in self._folders.keys())
 
-    def _get_folders_name(self):
+    def _update_folders(self):
+        """更新文件夹列表"""
         # list返回的结果是('OK', [b'(\\Marked) "/" "INBOX"', b'(\\Marked) "/" "&XfJT0ZAB-"'])
         resp, data = self.server.list()
 
@@ -67,4 +69,19 @@ class MailBox:
             folder_val = folder_name_byte.decode('ascii')
             self._folders[folder_key] = folder_val
 
+    def create_folder(self, folder_name: str) -> Folder:
+        """创建文件夹"""
+        self.server.create(folder_name)
+        self._update_folders()
+        return Folder(self.server, folder_name)
 
+    def rename_folder(self, old_folder_name: str, new_folder_name: str):
+        """修改文件夹名称"""
+        self.server.rename(old_folder_name, new_folder_name)
+        self._update_folders()
+        return Folder(self.server, new_folder_name)
+
+    def delete_folder(self, folder_name: str):
+        """删除文件夹"""
+        self.server.delete(folder_name)
+        self._update_folders()

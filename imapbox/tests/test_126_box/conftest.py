@@ -1,4 +1,5 @@
 import pytest
+from imaplib import IMAP4_SSL
 from imapbox import MailBox
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -9,7 +10,7 @@ class Settings(BaseSettings):
     user: str
     password: str
 
-    model_config = SettingsConfigDict(env_file='imapbox/tests/.env')
+    model_config = SettingsConfigDict(env_file='imapbox/tests/test_126_box/.env', env_file_encoding='utf-8')
 
 
 settings = Settings()
@@ -17,8 +18,7 @@ settings = Settings()
 
 @pytest.fixture(scope='session')
 def mail_box():
-    print(settings.host)
-    box = MailBox(settings.host, settings.port)
-    box.login(settings.user, settings.password)
+    box = MailBox(settings.host, settings.port, settings.user, settings.password)
+    box.login()
     yield box
     box.quit()

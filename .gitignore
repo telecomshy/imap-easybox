@@ -121,7 +121,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+imapbox/tests/test_126_box/.env
 .venv
 env/
 venv/
@@ -160,3 +160,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# 自定义忽略的文件夹
+imapbox/tests/test_126_box
