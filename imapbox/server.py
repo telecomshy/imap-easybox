@@ -70,7 +70,7 @@ class MailBox:
             self._folders[folder_key] = folder_val
 
     def create_folder(self, folder_name: str) -> Folder:
-        """创建文件夹"""
+        """创建文件夹, 创建已存在的文件夹不会抛出错误"""
         self.server.create(folder_name)
         self._update_folders()
         return Folder(self.server, folder_name)

@@ -1,4 +1,5 @@
 import email
+import re
 from email import generator
 from pathlib import Path
 from datetime import datetime
@@ -61,7 +62,8 @@ class Mail:
             self._headers = {k.lower(): v for k, v in self.raw_mail.items()}
         return self._headers
 
-    def get_mail_meta(self, key):
+    def _get_mail_meta(self, key):
+        """获取邮件头中指定的值"""
         value = self.headers.get(key)
         if value:
             value = ''.join(decode_mail_header(value))
@@ -69,19 +71,19 @@ class Mail:
 
     @property
     def subject(self):
-        return self.get_mail_meta("subject")
+        return self._get_mail_meta("subject")
 
     @property
     def sender(self):
-        return self.get_mail_meta("sender")
+        return self._get_mail_meta("sender")
 
     @property
     def from_(self):
-        return self.get_mail_meta("from")
+        return self._get_mail_meta("from")
 
     @property
     def to(self):
-        return self.get_mail_meta("to")
+        return self._get_mail_meta("to")
 
     @property
     def date(self):
@@ -151,6 +153,15 @@ class Mail:
         with open(filename, 'wt') as eml:
             gen = generator.Generator(eml)
             gen.flatten(self.raw_mail)
+
+    @property
+    def flags(self) -> list[str]:
+        # ['1 (FLAGS (\\Seen \\Flagged))']
+        raw_flags = self._fetch('FLAGS')[0].split()[2:]
+        return [re.sub(r'[()\\]', '', flag) for flag in raw_flags]
+
+    def _set_flag(self, flag: str):
+        pass
 
     def __repr__(self):
         return f"Mail<{self.mail_id}>"
