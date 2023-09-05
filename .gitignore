@@ -161,4 +161,3 @@ cython_debug/
 #.idea/
 
 # 自定义忽略的文件夹
-imapbox/tests/test_126_box
