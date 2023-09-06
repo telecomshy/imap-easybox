@@ -16,5 +16,8 @@ def test_create_folder(mail_box):
 
 def test_fetch_mail(mail_box):
     inbox = mail_box.select('inbox')
+    print(inbox.mails)
     mail1 = inbox.mails[0]
+    mail1.set_flags('seen draft')
     print(mail1.flags)
+

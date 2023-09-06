@@ -1,15 +1,19 @@
 import email
 import re
+from collections.abc import Iterable
 from email import generator
 from pathlib import Path
 from datetime import datetime
+from imaplib import IMAP4
 from .utils import decode_mail_header, parse_raw_mail, image_to_base64
+
+VALID_FLAGS = ['Seen', 'Flagged', 'Answered', 'Draft', 'Deleted']
 
 
 class Mail:
-    def __init__(self, server, mail_id, folder):
+    def __init__(self, server: IMAP4, mail_id: int | str, folder):
         self.server = server
-        self.mail_id = int(mail_id)
+        self.mail_id = str(mail_id)
         self.folder = folder
         self._raw_mail = None
         self._content = None
@@ -23,7 +27,7 @@ class Mail:
         # imap fetch的第二个参数是用括号括起来的1个或者多个指令，比如(RFC822), (RFC822 FLAGS)
         # 返回的data是一个列表，元素个数和指令个数对应，比如(RFC822)返回的data包含一个元素，(RFC822 FLAGS)返回的data包含二个元素
         # 如果元素是一个元组，则元组的第二个元素是邮件实体
-        typ, data = self.server.fetch(str(self.mail_id), command)
+        typ, data = self.server.fetch(self.mail_id, command)
 
         if typ != 'OK':
             raise ConnectionError(f"Error with IMAP: {typ}")
@@ -156,12 +160,41 @@ class Mail:
 
     @property
     def flags(self) -> list[str]:
-        # ['1 (FLAGS (\\Seen \\Flagged))']
-        raw_flags = self._fetch('FLAGS')[0].split()[2:]
-        return [re.sub(r'[()\\]', '', flag) for flag in raw_flags]
+        # self._fetch('FLAGS')的结果为['1 (FLAGS (\\Seen \\Flagged))']或者['1 (FLAGS ())']
+        # 转换成'1 FLAGS \\Seen \\Flagged'或者'1 FLAG  '
+        flags = self._fetch('FLAGS')[0].replace('(', '').replace(')', '').replace('\\', '')
+        # split不加参数会去掉结果中包含的''
+        flags = flags.split()[2:]
+        return flags
 
-    def _set_flag(self, flag: str):
-        pass
+    # 把flag设置为mail的特性容易和text_body等属性造成混淆，所以统一通过add_flags,set_flags,remove_flags来设置标志
+    def _store_flags(self, command: str, flags: str | Iterable):
+        """设置邮件标志通用方法"""
+        try:
+            flags = re.split(r',|\s+', flags)
+        except TypeError:
+            pass
+
+        flags = [flag.capitalize() for flag in flags]
+
+        for flag in flags:
+            if flag not in VALID_FLAGS:
+                raise ValueError(f'{flag} is not a valid flag.')
+
+        flags = ' '.join([rf'\{flag}' for flag in flags])
+        self.server.store(self.mail_id, command, flags)
+
+    def set_flags(self, flags):
+        """设置邮件标识，可用标识有seen, flagged, answered, draft, deleted"""
+        self._store_flags('FLAGS', flags)
+
+    def add_flags(self, flags):
+        """添加邮件标识"""
+        self._store_flags('+FLAGS', flags)
+
+    def remove_flags(self, flags):
+        """移除邮件标识"""
+        self._store_flags('-FLAGS', flags)
 
     def __repr__(self):
         return f"Mail<{self.mail_id}>"
