@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from .email import Mail
 
 if TYPE_CHECKING:
-    from .client import ImapServer
+    from .server import ImapServer
 
 
 class FoldList(UserList):

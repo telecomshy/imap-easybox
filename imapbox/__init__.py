@@ -1,2 +1,2 @@
-from .client import ImapServer
+from .server import ImapServer
 from .email import Mail
