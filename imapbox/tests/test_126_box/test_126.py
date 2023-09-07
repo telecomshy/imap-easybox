@@ -41,3 +41,12 @@ class TestFolder:
         assert "Folder<新测试文件夹>" not in str(mail_box.folders)
         with pytest.raises(RuntimeError):
             mails = test_folder.mails
+
+    def test_search_mail(self, mail_box):
+        inbox = mail_box.select('inbox')
+        # print(inbox.mails[0].subject)
+        # mails = inbox.search('(SUBJECT "账号安全提醒")'.encode('utf8'))
+        # print(mails)
+        print(mail_box.folders)
+        mail = inbox.mails[0]
+        mail.move_to("已删除")

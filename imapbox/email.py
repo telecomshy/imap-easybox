@@ -65,7 +65,7 @@ class Mail:
             self._headers = {k.lower(): v for k, v in self.raw_mail.items()}
         return self._headers
 
-    def _get_mail_meta(self, key):
+    def _get_mail_info(self, key):
         """获取邮件头中指定的值"""
         value = self.headers.get(key)
         if value:
@@ -74,19 +74,19 @@ class Mail:
 
     @property
     def subject(self):
-        return self._get_mail_meta("subject")
+        return self._get_mail_info("subject")
 
     @property
     def sender(self):
-        return self._get_mail_meta("sender")
+        return self._get_mail_info("sender")
 
     @property
     def from_(self):
-        return self._get_mail_meta("from")
+        return self._get_mail_info("from")
 
     @property
     def to(self):
-        return self._get_mail_meta("to")
+        return self._get_mail_info("to")
 
     @property
     def date(self):
@@ -167,7 +167,7 @@ class Mail:
         return flags
 
     # 把flag设置为mail的特性容易和text_body等属性造成混淆，所以统一通过add_flags,set_flags,remove_flags来设置标志
-    def _store_flags(self, command: str, flags: str | Iterable):
+    def _store_flags(self, command: str, flags: str):
         """设置邮件标志通用方法"""
         try:
             flags = re.split(r',|\s+', flags)
@@ -194,6 +194,11 @@ class Mail:
     def remove_flags(self, flags):
         """移除邮件标识"""
         self._store_flags('-FLAGS', flags)
+
+    def move_to(self, folder_name):
+        """将邮件移动到指定文件夹"""
+        self.server.copy(self.mail_id, self.box._folders[folder_name])
+        self.add_flags('deleted')
 
     def __repr__(self):
         return f"Mail<{self.mail_id}>"

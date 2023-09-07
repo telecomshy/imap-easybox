@@ -1,6 +1,6 @@
 import pytest
 from imaplib import IMAP4_SSL
-from imapbox import ImapServer
+from imapbox import ImapBox
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,7 +18,7 @@ settings = Settings()
 
 @pytest.fixture(scope='session')
 def mail_box():
-    box = ImapServer(settings.host, settings.port, settings.user, settings.password)
+    box = ImapBox(settings.host, settings.port, settings.user, settings.password)
     box.login()
     yield box
     box.quit()

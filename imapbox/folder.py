@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from .email import Mail
 
 if TYPE_CHECKING:
-    from .server import ImapServer
+    from .server import ImapBox
 
 
 class FoldList(UserList):
@@ -15,7 +15,7 @@ class FoldList(UserList):
 
 
 class Folder:
-    def __init__(self, folder_name: str, box: 'ImapServer'):
+    def __init__(self, folder_name: str, box: 'ImapBox'):
         self.box = box
         self.server = box.server
         self.folder_name = folder_name
@@ -24,13 +24,13 @@ class Folder:
     def mails(self):
         return self.search(None, 'ALL')
 
-    def search(self, *args):
-        typ, data = self.server.search(None, *args)
+    def search(self, *args, encoding=None):
+        typ, data = self.server.search(encoding, *args)
 
         if typ != 'OK':
             raise RuntimeError(data[0].decode("ascii"))
 
-        mail_ids = data[0].decode('utf8').split()
+        mail_ids = data[0].decode('ascii').split()
         return [Mail(i, self) for i in mail_ids]
 
     def rename(self, folder_name):
