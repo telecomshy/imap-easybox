@@ -21,11 +21,6 @@ class Folder:
         self.folder_name = folder_name
 
     @property
-    def mail_counts(self):
-        mails = self.search(None, 'ALL')
-        return len(mails) if mails else 0
-
-    @property
     def mails(self):
         return self.search(None, 'ALL')
 
@@ -35,9 +30,7 @@ class Folder:
         if typ != 'OK':
             raise RuntimeError(data[0].decode("ascii"))
 
-        mail_ids = data[0].decode('utf8').split(' ')
-        if mail_ids == ['']:
-            return []
+        mail_ids = data[0].decode('utf8').split()
         return [Mail(i, self) for i in mail_ids]
 
     def rename(self, folder_name):
