@@ -1,6 +1,3 @@
-from pprint import pprint
-
-
 class TestServer:
     def test_list_folders(self, mail_box):
         folders = str(mail_box.folders)
