@@ -29,22 +29,17 @@ class Mail:
     def _fetch(self, command):
         """根据指令获取邮件内容"""
         # imap fetch的第二个参数是用括号括起来的1个或者多个指令，比如(RFC822), (RFC822 FLAGS)
-        # 返回的data是一个列表，元素个数和指令个数对应，比如(RFC822)返回的data包含一个元素，(RFC822 FLAGS)返回的data包含二个元素
-        # 如果元素是一个元组，则元组的第二个元素是邮件实体
+        # 返回的data是一个列表，如果列表元素是一个元组，则元组的第二个元素是邮件实体
+        # 当指定的mail_id不正确的时候，返回的值为('OK', [None])
         typ, data = self.server.fetch(self.mail_id, command)
-
-        if typ != 'OK':
-            raise ConnectionError(f"Error with IMAP: {typ}")
 
         outputs = []
 
         for resp in data:
             if isinstance(resp, tuple):
                 outputs.append(resp[1].decode("utf-8"))
-            elif isinstance(resp, bytes):
+            if isinstance(resp, bytes):
                 outputs.append(resp.decode("utf-8"))
-            else:
-                raise ValueError(f"Unknown how to handle response, type is {resp}")
 
         return outputs
 

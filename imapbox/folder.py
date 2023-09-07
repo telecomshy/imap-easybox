@@ -31,6 +31,10 @@ class Folder:
 
     def search(self, *args):
         typ, data = self.server.search(None, *args)
+
+        if typ != 'OK':
+            raise RuntimeError(data[0].decode("ascii"))
+
         mail_ids = data[0].decode('utf8').split(' ')
         if mail_ids == ['']:
             return []
@@ -39,9 +43,10 @@ class Folder:
     def rename(self, folder_name):
         """更改文件夹名称"""
         self.box.rename_folder(self.folder_name, folder_name)
+        self.folder_name = folder_name
 
     def delete(self):
-        """修改文件夹名称"""
+        """删除文件夹"""
         self.box.delete_folder(self.folder_name)
 
     def __repr__(self):

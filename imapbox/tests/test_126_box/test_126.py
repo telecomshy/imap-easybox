@@ -1,3 +1,6 @@
+import pytest
+
+
 class TestServer:
     def test_list_folders(self, mail_box):
         folders = str(mail_box.folders)
@@ -18,6 +21,23 @@ class TestServer:
         assert "Folder<新测试文件夹>" not in str(mail_box.folders)
 
     def test_select_folder(self, mail_box):
-        assert mail_box.server.state == 'AUTH'
-        mail_box.select('inbox')
-        assert mail_box.server.state == 'SELECTED'
+        assert mail_box.state == 'AUTH'
+        inbox = mail_box.select('inbox')
+        assert mail_box.state == 'SELECTED'
+        assert inbox.folder_name == 'inbox'
+
+
+class TestFolder:
+    def test_rename_folder(self, mail_box):
+        mail_box.create_folder('测试文件夹')
+        test_folder = mail_box.select('测试文件夹')
+        test_folder.rename('新测试文件夹')
+        assert test_folder.folder_name == '新测试文件夹'
+        assert "Folder<新测试文件夹>" in str(mail_box.folders)
+
+    def test_delete_folder(self, mail_box):
+        test_folder = mail_box.select('新测试文件夹')
+        test_folder.delete()
+        assert "Folder<新测试文件夹>" not in str(mail_box.folders)
+        with pytest.raises(RuntimeError):
+            mails = test_folder.mails
