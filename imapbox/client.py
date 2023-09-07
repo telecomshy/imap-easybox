@@ -1,10 +1,14 @@
 import imaplib
+from typing import Union
 from .folder import Folder, FoldList
 from .utils import imap_utf7_encode, imap_utf7_decode
 
 
-class MailBox:
-    def __init__(self, host, port=993, user=None, password=None, ssl=True, **kwargs):
+class ImapServer:
+    server: Union[imaplib.IMAP4, imaplib.IMAP4_SSL, None]
+
+    def __init__(self, host: str, port=993, user: str | None = None, password: str | None = None, ssl: bool = True,
+                 **kwargs):
         self.host = host
         self.port = port
         self.user = user
@@ -15,7 +19,7 @@ class MailBox:
         # self._folders是邮箱中文名和原始名称构成的字典
         self._folders = None
 
-    def login(self, user=None, password=None):
+    def login(self, user: str | None = None, password: str | None = None):
         """登陆并获取所有文件夹名称"""
 
         if user is None:
@@ -39,7 +43,7 @@ class MailBox:
 
         self.server.logout()
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str):
         return getattr(self.server, item)
 
     def __enter__(self):

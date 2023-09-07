@@ -1,5 +1,9 @@
 from collections import UserList
+from typing import TYPE_CHECKING
 from .email import Mail
+
+if TYPE_CHECKING:
+    from .client import ImapServer
 
 
 class FoldList(UserList):
@@ -11,7 +15,7 @@ class FoldList(UserList):
 
 
 class Folder:
-    def __init__(self, folder_name, box):
+    def __init__(self, folder_name: str, box: 'ImapServer'):
         self.box = box
         self.server = box.server
         self.folder_name = folder_name
@@ -33,10 +37,12 @@ class Folder:
         return [Mail(i, self) for i in mail_ids]
 
     def rename(self, folder_name):
-        pass
+        """更改文件夹名称"""
+        self.box.rename_folder(self.folder_name, folder_name)
 
     def delete(self):
-        pass
+        """修改文件夹名称"""
+        self.box.delete_folder(self.folder_name)
 
     def __repr__(self):
         return f"Folder<{self.folder_name}>"

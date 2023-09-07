@@ -4,14 +4,17 @@ from collections.abc import Iterable
 from email import generator
 from pathlib import Path
 from datetime import datetime
-from imaplib import IMAP4
+from typing import TYPE_CHECKING
 from .utils import decode_mail_header, parse_raw_mail, image_to_base64
 
 VALID_FLAGS = ['Seen', 'Flagged', 'Answered', 'Draft', 'Deleted']
 
+if TYPE_CHECKING:
+    from .folder import Folder
+
 
 class Mail:
-    def __init__(self, mail_id: int | str, folder):
+    def __init__(self, mail_id: int | str, folder: 'Folder'):
         self.folder = folder
         self.box = folder.box
         self.server = folder.server
