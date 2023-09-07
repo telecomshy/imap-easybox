@@ -42,6 +42,8 @@ class Folder:
         """删除文件夹"""
         self.box.delete_folder(self.folder_name)
         self.folder_name = None
+        self.box = None
+        self.server = None
 
     def __repr__(self):
         return f"Folder<{self.folder_name}>"
