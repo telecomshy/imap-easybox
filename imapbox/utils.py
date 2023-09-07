@@ -83,3 +83,14 @@ def image_to_base64(image: Union[str, bytes], encoding):
     image_base64 = base64.b64encode(image)
     image_base64 = image_base64.decode(encoding)
     return image_base64
+
+
+def imap_utf7_encode(text: str):
+    """将字符串转换成imap支持的utf7编码，并将+号替换成&号"""
+    return text.encode('utf7').replace(b'+', b'&')
+
+
+def imap_utf7_decode(bytes_: bytes):
+    """将imap的字节编码转换成字符串，imap是utf7格式，并将+号替换成&号"""
+    return bytes_.replace(b'&', b'+').decode('utf7')
+

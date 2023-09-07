@@ -1,5 +1,6 @@
 import imaplib
 from .folder import Folder, FoldList
+from .utils import imap_utf7_encode, imap_utf7_decode
 
 
 class MailBox:
@@ -12,7 +13,7 @@ class MailBox:
         self.server = None
         self.kwargs = kwargs
         # self._folders是邮箱中文名和原始名称构成的字典
-        self._folders = {}
+        self._folders = None
 
     def login(self, user=None, password=None):
         """登陆并获取所有文件夹名称"""
@@ -51,37 +52,51 @@ class MailBox:
     def select(self, folder_name: str) -> Folder:
         folder_raw_name = self._folders[folder_name.lower()]
         self.server.select(folder_raw_name)
-        return Folder(self.server, folder_name)
+        return Folder(folder_name, self)
 
     @property
     def folders(self) -> FoldList:
-        return FoldList(Folder(self.server, folder_name) for folder_name in self._folders.keys())
+        return FoldList(Folder(folder_name, self) for folder_name in self._folders.keys())
 
     def _update_folders(self):
         """更新文件夹列表"""
+        self._folders = {}
+
         # list返回的结果是('OK', [b'(\\Marked) "/" "INBOX"', b'(\\Marked) "/" "&XfJT0ZAB-"'])
-        resp, data = self.server.list()
+        typ, data = self.server.list()
 
         # 结果中类似&XfJT0ZAB-的字符串是utf7编码，并且把+号替换回&符号
         for folder_byte in data:
             folder_name_byte = folder_byte.split(b' ')[-1].replace(b'"', b'')
-            folder_key = folder_name_byte.replace(b"&", b"+").decode('utf7').lower()
-            folder_val = folder_name_byte.decode('ascii')
-            self._folders[folder_key] = folder_val
+            folder_name_key = imap_utf7_decode(folder_name_byte).lower()
+            folder_name_val = folder_name_byte.decode('ascii')
+            self._folders[folder_name_key] = folder_name_val
 
-    def create_folder(self, folder_name: str) -> Folder:
-        """创建文件夹, 创建已存在的文件夹不会抛出错误"""
+    def create_folder(self, folder_name: str):
+        """创建文件夹"""
+        # 创建已存在的文件夹返回('NO', [b'CREATE Folder exist']
+        folder_name = imap_utf7_encode(folder_name)
         self.server.create(folder_name)
         self._update_folders()
-        return Folder(self.server, folder_name)
 
     def rename_folder(self, old_folder_name: str, new_folder_name: str):
         """修改文件夹名称"""
+        try:
+            old_folder_name = self._folders[old_folder_name.lower()]
+        except KeyError:
+            raise NameError(f"Folder<{old_folder_name}>不存在")
+
+        new_folder_name = imap_utf7_encode(new_folder_name).decode('ascii')
         self.server.rename(old_folder_name, new_folder_name)
         self._update_folders()
-        return Folder(self.server, new_folder_name)
 
     def delete_folder(self, folder_name: str):
         """删除文件夹"""
+        # 删除不存在的文件夹会返回('NO', [b'DELETE Folder not exist'])
+        try:
+            folder_name = self._folders[folder_name.lower()]
+        except KeyError:
+            raise NameError(f"Folder<{folder_name}>不存在")
+
         self.server.delete(folder_name)
         self._update_folders()

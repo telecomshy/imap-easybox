@@ -9,15 +9,10 @@ def test_list_folders(mail_box):
 
 
 def test_create_folder(mail_box):
-    test_folder = mail_box.create_folder('test_folder')
-    assert test_folder.folder_name == 'test_folder'
-    assert "Folder<test_folder>" in str(mail_box.folders)
+    mail_box.create_folder('测试文件夹')
+    assert "Folder<测试文件夹>" in str(mail_box.folders)
 
 
-def test_fetch_mail(mail_box):
-    inbox = mail_box.select('inbox')
-    print(inbox.mails)
-    mail1 = inbox.mails[0]
-    mail1.set_flags('seen draft')
-    print(mail1.flags)
-
+def test_delete_folder(mail_box):
+    mail_box.delete_folder('测试文件夹')
+    assert "Folder<测试文件夹>" not in str(mail_box.folders)

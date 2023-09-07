@@ -11,10 +11,11 @@ VALID_FLAGS = ['Seen', 'Flagged', 'Answered', 'Draft', 'Deleted']
 
 
 class Mail:
-    def __init__(self, server: IMAP4, mail_id: int | str, folder):
-        self.server = server
-        self.mail_id = str(mail_id)
+    def __init__(self, mail_id: int | str, folder):
         self.folder = folder
+        self.box = folder.box
+        self.server = folder.server
+        self.mail_id = str(mail_id)
         self._raw_mail = None
         self._content = None
         self._headers = None

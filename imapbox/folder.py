@@ -11,8 +11,9 @@ class FoldList(UserList):
 
 
 class Folder:
-    def __init__(self, server, folder_name):
-        self.server = server
+    def __init__(self, folder_name, box):
+        self.box = box
+        self.server = box.server
         self.folder_name = folder_name
 
     @property
@@ -29,7 +30,13 @@ class Folder:
         mail_ids = data[0].decode('utf8').split(' ')
         if mail_ids == ['']:
             return []
-        return [Mail(self.server, i, self) for i in mail_ids]
+        return [Mail(i, self) for i in mail_ids]
+
+    def rename(self, folder_name):
+        pass
+
+    def delete(self):
+        pass
 
     def __repr__(self):
         return f"Folder<{self.folder_name}>"
