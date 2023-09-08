@@ -22,16 +22,43 @@ class Folder:
 
     @property
     def mails(self):
-        return self.search(None, 'ALL')
+        return self.search('ALL')
 
-    def search(self, *args, encoding=None):
-        typ, data = self.server.search(encoding, *args)
+    def search(self, query=None, *, encoding=None, **kwargs):
+        """根据条件搜索邮件"""
+        if query is None:
+            query = self._format_search_query(kwargs)
+
+        if encoding:
+            query = query.encode(encoding)
+
+        typ, data = self.server.search(encoding, query)
 
         if typ != 'OK':
             raise RuntimeError(data[0].decode("ascii"))
 
         mail_ids = data[0].decode('ascii').split()
         return [Mail(i, self) for i in mail_ids]
+
+    @staticmethod
+    def _format_search_query(kwargs):
+        """根据传入search方法的关键字参数构造原生的搜索条件字符串"""
+        criteria = []
+
+        for field, value in kwargs.items():
+            field = field.rstrip('_').upper()
+
+            if isinstance(value, str):
+                criteria.append(f"({field} {value})")
+
+            if isinstance(value, bool):
+                if value:
+                    criteria.append(f"({field})")
+                else:
+                    criteria.append(f"(NOT {field})")
+
+        query = f"({' '.join(criteria)})"
+        return query
 
     def rename(self, folder_name):
         """更改文件夹名称"""

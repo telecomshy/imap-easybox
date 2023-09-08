@@ -121,7 +121,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-imapbox/tests/test_126_box/.env
+tests/test_126_box/.env
 .venv
 env/
 venv/

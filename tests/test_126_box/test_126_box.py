@@ -44,9 +44,11 @@ class TestFolder:
 
     def test_search_mail(self, mail_box):
         inbox = mail_box.select('inbox')
-        # print(inbox.mails[0].subject)
-        # mails = inbox.search('(SUBJECT "账号安全提醒")'.encode('utf8'))
-        # print(mails)
-        print(mail_box.folders)
-        mail = inbox.mails[0]
-        mail.move_to("已删除")
+        mails = inbox.search(subject="new")
+        assert len(mails) == 1
+
+
+class TestMail:
+
+    def test_move_mail(self, mail_box):
+        ...
