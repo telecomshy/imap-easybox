@@ -1,0 +1,26 @@
+# pyproject.toml
+
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "imap-box"
+version = "0.1.0"
+description = "Easier use of imap mailboxes based on imaplib"
+readme = "readme.md"
+authors = [{ name = "telecomshy", email = "telecomshy@126.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["imap", "imaplib"]
+requires-python = ">=3.7"
+
+[project.optional-dependencies]
+dev = ["pytest", "pip-tools"]
+
+[project.urls]
+Homepage = "https://github.com/telecomshy/imap-box"

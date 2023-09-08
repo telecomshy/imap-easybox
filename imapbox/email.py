@@ -1,6 +1,5 @@
 import email
 import re
-from collections.abc import Iterable
 from email import generator
 from pathlib import Path
 from datetime import datetime
