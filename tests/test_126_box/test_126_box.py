@@ -50,5 +50,8 @@ class TestFolder:
 
 class TestMail:
 
-    def test_move_mail(self, mail_box):
-        ...
+    def test_add_flag(self, inbox):
+        mail = inbox.mails[0]
+        print(mail.flags)
+        mail.add_flags(['Flagged', 'Answered'])
+        print(mail.flags)

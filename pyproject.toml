@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 name = "imap-box"
 version = "0.1.0"
 description = "Easier use of imap mailboxes based on imaplib"
-readme = "readme.md"
+readme = "README.md"
 authors = [{ name = "telecomshy", email = "telecomshy@126.com" }]
 license = { file = "LICENSE" }
 classifiers = [

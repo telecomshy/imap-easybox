@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     user: str
     password: str
 
-    model_config = SettingsConfigDict(env_file='imapbox/tests/test_126_box/.env', env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file='./tests/test_126_box/.env', env_file_encoding='utf-8')
 
 
 settings = Settings()
@@ -22,3 +22,9 @@ def mail_box():
     box.login()
     yield box
     box.quit()
+
+
+@pytest.fixture(scope='session')
+def inbox(mail_box):
+    inbox = mail_box.select('inbox')
+    return inbox

@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 from .utils import decode_mail_header, parse_raw_mail, image_to_base64
 
-VALID_FLAGS = ['Seen', 'Flagged', 'Answered', 'Draft', 'Deleted']
+VALID_FLAGS = ['Seen', 'Flagged', 'Answered', 'Draft', 'Deleted', 'Recent']
 
 if TYPE_CHECKING:
     from .folder import Folder
