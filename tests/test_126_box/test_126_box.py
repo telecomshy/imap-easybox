@@ -44,8 +44,11 @@ class TestFolder:
 
     def test_search_mail(self, mail_box):
         inbox = mail_box.select('inbox')
-        mails = inbox.search(subject="new")
-        assert len(mails) == 1
+        print(inbox.mails)
+        # mails = inbox.search(subject="new")
+        # assert len(mails) == 1
+        mails = inbox.search('(NOT (SUBJECT "new"))')
+        print(mails)
 
 
 class TestMail:

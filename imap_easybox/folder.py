@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from .email import Mail
 
 if TYPE_CHECKING:
-    from .server import ImapBox
+    from .server import ImapEasyBox
 
 
 class FoldList(UserList):
@@ -15,7 +15,7 @@ class FoldList(UserList):
 
 
 class Folder:
-    def __init__(self, folder_name: str, box: 'ImapBox'):
+    def __init__(self, folder_name: str, box: 'ImapEasyBox'):
         self.box = box
         self.server = box.server
         self.folder_name = folder_name

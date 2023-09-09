@@ -10,7 +10,7 @@ imap_tools感觉稍微有点复杂。因为工作需要，顺便完整学习编�
 ## 安装
 
 ```shell
-pip install imap-box
+pip install imap_easybox
 ```
 
 ## 如何使用
@@ -18,9 +18,9 @@ pip install imap-box
 ### 基本例子
 
 ```python
-from imapbox import ImapBox
+from imap_easybox import ImapEasyBox
 
-box = ImapBox('imap.mail.com', port=993)  # 端口默认993
+box = ImapEasyBox('imap.mail.com', port=993)  # 端口默认993
 
 # 登录邮箱
 box.login('username', 'password')
@@ -39,14 +39,14 @@ mails = inbox_folder.mails
 mail = mails[0]
 
 # 获取邮件的相关属性
-mail.subject              # 邮件主题
-mail.from_                # 邮件来源
-mail.sender               # 发件人
-mail.to                   # 收件人
-mail.text_body            # 邮件文本内容
-mail.html_body            # 邮件html内容
-mail.save_attachments()   # 保存邮件附件到本地
-mail.move_to('垃圾箱')     # 将邮件移动到垃圾箱
+mail.subject  # 邮件主题
+mail.from_  # 邮件来源
+mail.sender  # 发件人
+mail.to  # 收件人
+mail.text_body  # 邮件文本内容
+mail.html_body  # 邮件html内容
+mail.save_attachments()  # 保存邮件附件到本地
+mail.move_to('垃圾箱')  # 将邮件移动到垃圾箱
 
 box.quit()  # 退出邮箱
 ```

@@ -4,7 +4,7 @@ from .folder import Folder, FoldList
 from .utils import imap_utf7_encode, imap_utf7_decode
 
 
-class ImapBox:
+class ImapEasyBox:
     server: Union[imaplib.IMAP4, imaplib.IMAP4_SSL, None]
 
     def __init__(self, host: str, port=993, user: str | None = None, password: str | None = None, ssl: bool = True,

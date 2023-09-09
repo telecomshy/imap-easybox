@@ -1,6 +1,6 @@
 import pytest
 from imaplib import IMAP4_SSL
-from imapbox import ImapBox
+from imapbox import ImapEasyBox
 
 
 class FakeImap(IMAP4_SSL):
@@ -26,7 +26,7 @@ class FakeImap(IMAP4_SSL):
 
 @pytest.fixture(scope='session')
 def fake_box():
-    box = ImapBox('imap.fakeserver.com')
+    box = ImapEasyBox('imap.fakeserver.com')
     box.imap_cls = FakeImap
     box.login()
     yield box
