@@ -39,14 +39,14 @@ mails = inbox_folder.mails
 mail = mails[0]
 
 # 获取邮件的相关属性
-mail.subject  # 邮件主题
-mail.from_  # 邮件来源
-mail.sender  # 发件人
-mail.to  # 收件人
-mail.text_body  # 邮件文本内容
-mail.html_body  # 邮件html内容
+mail.subject             # 邮件主题
+mail.from_               # 邮件来源
+mail.sender              # 发件人
+mail.to                  # 收件人
+mail.text_body           # 邮件文本内容
+mail.html_body           # 邮件html内容
 mail.save_attachments()  # 保存邮件附件到本地
-mail.move_to('垃圾箱')  # 将邮件移动到垃圾箱
+mail.move_to('垃圾箱')    # 将邮件移动到垃圾箱
 
 box.quit()  # 退出邮箱
 ```
@@ -113,11 +113,11 @@ inbox_folder.search(on='13-Aug-2023')                       # 按日期搜索，
 原生搜索语句规则基本上就是，参数用双引号包含起来，整个搜索条件
 用圆括号包含起来，如果没有参数，则直接上圆括号，下面是几个例子：
 ```python
-inbox_folder.search('(SUBJECT "test")')
-inbox_folder.search('((FROM "imap.mail.com") (SEEN))')    # 条件之间是与的关系
-inbox_folder.search('(FROM "imap.mail.com") (SEEN)')      # 最外层的圆括号可要可不要
-inbox_folder.search('OR (FROM "imap.mail.com") (SEEN)')   # 按或的关系进行搜索
-inbox_folder.search('NOT (FROM "imap.mail.com") (SEEN)')  # 按否的关系进行搜索
+mails = inbox_folder.search('(SUBJECT "test")')
+mails = inbox_folder.search('((FROM "imap.mail.com") (SEEN))')    # 条件之间是与的关系
+mails = inbox_folder.search('(FROM "imap.mail.com") (SEEN)')      # 最外层的圆括号可要可不要
+mails = inbox_folder.search('OR (FROM "imap.mail.com") (SEEN)')   # 按或的关系进行搜索
+mails = inbox_folder.search('NOT (FROM "imap.mail.com") (SEEN)')  # 按否的关系进行搜索
 ```
 
 ## 作者
