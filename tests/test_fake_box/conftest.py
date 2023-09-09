@@ -1,6 +1,6 @@
 import pytest
 from imaplib import IMAP4_SSL
-from imapbox import ImapEasyBox
+from imap_easybox import ImapEasyBox
 
 
 class FakeImap(IMAP4_SSL):

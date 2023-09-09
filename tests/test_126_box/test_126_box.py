@@ -39,22 +39,17 @@ class TestFolder:
         test_folder = mail_box.select('新测试文件夹')
         test_folder.delete()
         assert "Folder<新测试文件夹>" not in str(mail_box.folders)
-        with pytest.raises(RuntimeError):
-            mails = test_folder.mails
+        assert test_folder.folder_name is None
 
     def test_search_mail(self, mail_box):
         inbox = mail_box.select('inbox')
-        print(inbox.mails)
-        # mails = inbox.search(subject="new")
-        # assert len(mails) == 1
-        mails = inbox.search('(NOT (SUBJECT "new"))')
-        print(mails)
+        mails = inbox.search(subject="new")
+        assert len(mails) == 1
 
 
 class TestMail:
 
     def test_add_flag(self, inbox):
         mail = inbox.mails[0]
-        print(mail.flags)
         mail.add_flags(['Flagged', 'Answered'])
-        print(mail.flags)
+        assert 'Flagged' in mail.flags and 'Answered' in mail.flags

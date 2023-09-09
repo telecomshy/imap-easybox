@@ -1,4 +1,4 @@
-# Imap Box
+# Imap Easy Box
 
 ## 简单介绍
 imapbox是基于python内置imaplib，方便收取邮件，
