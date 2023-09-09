@@ -91,7 +91,6 @@ mail.remove_flags(['Flagged', 'Answered'])  # 删除邮件标签
 
 ### 搜索邮件
 
----
 `folder.mails`会返回文件夹内的所有邮件，但有时候我们想要搜索满足条件的某些邮件，
 可以调用`folder.search`方法，`folder.search`支持通过关键字参数传递搜索条件，
 也可以直接传入原生的(即内置库`imaplib`)搜索语句:
