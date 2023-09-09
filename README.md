@@ -108,7 +108,9 @@ inbox_folder.search(on='13-Aug-2023')                       # 按日期搜索，
 原生的搜索语句。[redbox](https://github.com/Miksus/red-box)和
 [imap_tools](https://github.com/ikvk/imap_tools)都提供了特别
 的搜索语句，但是实际上原生的搜索语句也不是很复杂，所以就偷个懒，没有再
-费脑子了。原生搜索语句规则基本上就是，参数用双引号包含起来，整个搜索条件
+费脑子了。
+
+原生搜索语句规则基本上就是，参数用双引号包含起来，整个搜索条件
 用圆括号包含起来，如果没有参数，则直接上圆括号，下面是几个例子：
 ```python
 inbox_folder.search('(SUBJECT "test")')
