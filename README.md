@@ -1,7 +1,5 @@
 # Imap Box
 
----
-
 ## 简单介绍
 imapbox是基于python内置imaplib，方便收取邮件，
 读取邮件内容。 类似的三方包有[redbox](https://github.com/Miksus/red-box)，
@@ -11,14 +9,12 @@ imap_tools感觉稍微有点复杂。因为工作需要，顺便完整学习编�
 
 ## 安装
 
----
 ```shell
 pip install imap-box
 ```
 
 ## 如何使用
 
----
 ### 基本例子
 
 ```python
@@ -67,7 +63,6 @@ with ImapBox('imap.mail.com', username='username', password='password') as box:
 
 ### 文件夹操作
 
----
 可以对文件夹进行新建，改名，删除的操作：
 ```python
 box.create_folder('folder_name')                         # 创建文件夹
@@ -82,8 +77,6 @@ inbox_folder.delete()                   # 删除该文件夹
 ```
 
 ### 操作邮件标签
-
----
 
 可以对邮件标签进行操作，根据[RFC2060](https://datatracker.ietf.org/doc/html/rfc2060.html#section-6.4.4)，
 目前支持6个标签的设置，分别是`Seen`, `Flagged`, `Answered`, `Draft`, `Deleted`, `Recent`，
@@ -125,9 +118,6 @@ inbox_folder.search('(FROM "imap.mail.com") (SEEN)')      # 最外层的圆括�
 inbox_folder.search('OR (FROM "imap.mail.com") (SEEN)')   # 按或的关系进行搜索
 inbox_folder.search('NOT (FROM "imap.mail.com") (SEEN)')  # 按否的关系进行搜索
 ```
-
-
-
 
 ## 作者
 
