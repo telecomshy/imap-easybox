@@ -28,9 +28,11 @@ box.login('username', 'password')
 # 列出邮箱当前所有文件夹,返回[folder<'inbox'>, folder<'发件箱'>, ...]
 folders = box.folders
 
-# 选择inbox文件夹，返回Folder实例
-# 也可以通过索引来选取文件夹，inbox = folders[0]，通过索引选取文件夹，会自动select到该文件夹
+# 首先要通过box的select方法选择一个文件夹，返回的是Folder实例
 inbox_folder = box.select('inbox')
+# 也可以通过整数或者字符串索引返回文件夹，会自动select该文件夹
+inbox_folder = box[0]
+inbox_folder = box['inbox']
 
 # 查看文件夹所有邮件,返回[mail<1>, mail<2>...]
 mails = inbox_folder.mails

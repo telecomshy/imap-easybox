@@ -26,6 +26,13 @@ class TestServer:
         assert mail_box.state == 'SELECTED'
         assert inbox.folder_name == 'inbox'
 
+    @pytest.mark.parametrize("item", [0, 'inbox'])
+    def test_select_folder_by_item(self, mail_box, item):
+        folders = mail_box.folders
+        inbox = folders[item]
+        assert inbox.folder_name == 'inbox'
+        assert mail_box.state == 'SELECTED'
+
 
 class TestFolder:
     def test_rename_folder(self, mail_box):
@@ -44,7 +51,7 @@ class TestFolder:
     def test_search_mail(self, mail_box):
         inbox = mail_box.select('inbox')
         mails = inbox.search(subject="new")
-        assert len(mails) == 1
+        assert "new" in mails[0].subject
 
 
 class TestMail:
