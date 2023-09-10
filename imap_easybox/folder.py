@@ -11,14 +11,15 @@ class FoldList(UserList):
         if isinstance(item, str):
             for folder in self:
                 if item == folder.folder_name:
-                    return folder
-                else:
-                    raise KeyError(item)
+                    val = folder
+                    break
+            else:
+                raise KeyError(item)
         else:
             val = super().__getitem__(item)
 
         if isinstance(val, Folder):
-            val.server.select(val.folder_name)
+            val.box.select(val.folder_name)
         return val
 
 

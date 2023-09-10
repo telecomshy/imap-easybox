@@ -26,11 +26,13 @@ class TestServer:
         assert mail_box.state == 'SELECTED'
         assert inbox.folder_name == 'inbox'
 
-    @pytest.mark.parametrize("item", [0, 'inbox'])
-    def test_select_folder_by_item(self, mail_box, item):
+    def test_select_folder_by_item(self, mail_box):
         folders = mail_box.folders
-        inbox = folders[item]
-        assert inbox.folder_name == 'inbox'
+        draft_folder = folders[1]
+        assert draft_folder.folder_name == '草稿箱'
+        assert mail_box.state == 'SELECTED'
+        send_folder = folders["已发送"]
+        assert send_folder.folder_name == '已发送'
         assert mail_box.state == 'SELECTED'
 
 
