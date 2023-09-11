@@ -18,6 +18,6 @@
 
 - 初始版本
 
-[unreleased]: https://github.com/telecomshy/imap-easybox/compare/v0.1.1...master
+[unreleased]: https://github.com/telecomshy/imap-easybox/compare/master...V0.1.1
 [0.1.1]: https://github.com/telecomshy/imap-easybox/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/telecomshy/imap-easybox/releases/tag/V0.1.0
