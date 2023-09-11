@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "imap-easybox"
-version = "0.1.0"
+version = "0.1.1"
 description = "Easier use of imap mailboxes based on imaplib"
 readme = "README.md"
 authors = [{ name = "telecomshy", email = "telecomshy@126.com" }]
@@ -23,4 +23,4 @@ requires-python = ">=3.7"
 dev = ["pytest", "pip-tools"]
 
 [project.urls]
-Homepage = "https://github.com/telecomshy/imap-box"
+Homepage = "https://github.com/telecomshy/imap-easybox"
