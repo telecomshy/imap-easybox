@@ -73,6 +73,7 @@ def parse_raw_mail(raw_mail: Message):
 def image_to_base64(image: Union[str, bytes], encoding):
     """
     将图片转换成base64编码
+
     :param image: 字节码或者字符串，如果是字符串，表示图片的路径
     :param encoding: 字符串编码
     :return: base64编码字符串
