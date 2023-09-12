@@ -31,8 +31,8 @@ folders = box.folders
 # 首先要通过box的select方法选择一个文件夹，返回的是Folder实例
 inbox_folder = box.select('inbox')
 # 也可以通过整数或者字符串索引返回文件夹，会自动select该文件夹
-inbox_folder = box[0]
-inbox_folder = box['inbox']
+inbox_folder = folders[0]
+inbox_folder = folders['inbox']
 
 # 查看文件夹所有邮件,返回[mail<1>, mail<2>...]
 mails = inbox_folder.mails
