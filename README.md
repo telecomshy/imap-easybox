@@ -54,18 +54,18 @@ box.quit()  # 退出邮箱
 ```
 也可以在创建实例的时候传入用户名密码，登录的时候就不用再输入了：
 ```python
-box = ImapBox('imap.mail.com', port=993, username='username', password='password')
+box = ImapEasyBox('imap.mail.com', port=993, username='username', password='password')
 box.login()
 ```
 也支持上下文管理器:
 ```python
-with ImapBox('imap.mail.com', username='username', password='password') as box:
+with ImapEasyBox('imap.mail.com', username='username', password='password') as box:
     ...
 ```
 
 ### 文件夹操作
 
-可以对文件夹进行新建，改名，删除的操作：
+可以对文件夹进行新建，改名，删除：
 ```python
 box.create_folder('folder_name')                         # 创建文件夹
 box.rename_folder('old_folder_name', 'new_folder_name')  # 重命名文件夹
