@@ -4,7 +4,6 @@ imap\_easybox.server module
 .. automodule:: imap_easybox.server
    :members:
    :undoc-members:
-   :show-inheritance:
 
 imap\_easybox.folder module
 ===========================

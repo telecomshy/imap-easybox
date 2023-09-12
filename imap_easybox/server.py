@@ -3,12 +3,37 @@ from typing import Union
 from .folder import Folder, FoldList
 from .utils import imap_utf7_encode, imap_utf7_decode
 
+"""
+server模块
+"""
+
 
 class ImapEasyBox:
+    """
+    主要模块
+
+    :Example:
+
+    >>> from imap_easybox import ImapEasyBox
+    >>> box = ImapEasyBox(host='host.com', port=993)
+    """
     server: Union[imaplib.IMAP4, imaplib.IMAP4_SSL, None]
 
     def __init__(self, host: str, port=993, user: str | None = None, password: str | None = None, ssl: bool = True,
                  **kwargs):
+        """
+        :param host: 邮箱服务器域名
+        :type host: str
+        :param port: 端口号
+        :type port: int
+        :param user: 用户名
+        :type user: str
+        :param password: 密码
+        :type password: str
+        :param ssl: 是否启用ssl协议
+        :type ssl: bool
+        :param kwargs: 其它任何关键字参数，透传给`imaplib`初始函数
+        """
         self.host = host
         self.port = port
         self.user = user
@@ -20,7 +45,13 @@ class ImapEasyBox:
         self._folders = None
 
     def login(self, user: str | None = None, password: str | None = None):
-        """登陆并获取所有文件夹名称"""
+        """
+        登陆，登录以后会自动获取所有文件夹名称
+
+        :param user: 用户名
+        :param password: 密码
+        :return: None
+        """
 
         if user is None:
             user = self.user
