@@ -8,6 +8,7 @@
 
 import pathlib
 import sys
+
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 
 project = 'imap easybox'
@@ -21,8 +22,10 @@ release = '0.1.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx'
 ]
 
+intersphinx_mapping = {'python': ('https://docs.python.org/3.11', None)}
 templates_path = ['_templates']
 exclude_patterns = []
 
@@ -34,6 +37,5 @@ language = 'zh_CN'
 # html_theme = 'alabaster'
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-
 
 # master_doc = "contents"

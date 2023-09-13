@@ -6,72 +6,24 @@
 Imap EasyBox的文档
 ========================================
 
+简单介绍
+-----------------
+
+``imap-easybox`` 基于python内置 :py:mod:`imaplib`，方便收取邮件，读取邮件内容。
+
+网上类似的三方包有 `redbox <https://github.com/Miksus/red-box>`_ ，`imap_tools <https://github.com/ikvk/imap_tools>`_ ，
+`redbox` 对中文支持不太好，`imap_tools` 感觉稍微有一丢丢复杂。因为工作需要，另外一直想要学习完整的编写一个python包，包括不限于代码注释，
+单元测试，文档编写...，因此写了这样一个小工具。
+
+也欢迎大家和我交流python编程知识，我的邮箱是 telecomshy@126.com。
+
 使用手册
 -----------------
 
-安装
-+++++++++++++++++
+.. toctree::
+   :maxdepth: 2
 
-.. code-block:: console
-
-   pip install imap_easybox
-
-基本操作
-+++++++++++++++++
-
-.. code-block:: python
-
-   from imap_easybox import ImapEasyBox
-
-   box = ImapEasyBox('imap.mail.com', port=993)  # 端口默认993
-
-   # 登录邮箱
-   box.login('username', 'password')
-
-   # 列出邮箱当前所有文件夹,返回[folder<'inbox'>, folder<'发件箱'>, ...]
-   folders = box.folders
-
-   # 首先要通过box的select方法选择一个文件夹，返回Folder实例
-   inbox_folder = box.select('inbox')
-   # 也可以通过整数或者字符串索引返回文件夹，会自动select该文件夹
-   inbox_folder = folders[0]
-   inbox_folder = folders['inbox']
-
-   # 查看文件夹所有邮件,返回[mail<1>, mail<2>...]
-   mails = inbox_folder.mails
-
-   # 获取第一封邮件, 返回Mail对象实例
-   mail = mails[0]
-
-   # 获取邮件的相关属性
-   mail.subject             # 查看邮件主题
-   mail.from_               # 查看邮件来源
-   mail.sender              # 发件人
-   mail.to                  # 收件人
-   mail.text_body           # 邮件文本内容
-   mail.html_body           # 邮件html内容
-   mail.save_attachments()  # 保存邮件附件到本地
-   mail.move_to('垃圾箱')    # 将邮件移动到垃圾箱
-
-   box.quit()  # 退出邮箱
-
-文件夹操作
-+++++++++++++++++
-
-可以对文件夹进行新建，改名，删除：
-
-.. code-block:: python
-
-   box.create_folder('folder_name')                         # 创建文件夹
-   box.rename_folder('old_folder_name', 'new_folder_name')  # 重命名文件夹
-   box.delete_folder('folder_name')                         # 删除文件夹
-
-``Folder`` 实例也提供了 ``rename`` 和 ``delete`` 方法：
-
-.. code-block:: python
-
-   inbox_folder.rename('new_folder_name')  # 重命名文件夹
-   inbox_folder.delete()                   # 删除该文件夹
+   tutorial
 
 API参考
 -----------------
