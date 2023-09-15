@@ -58,7 +58,8 @@
    box.rename_folder('old_folder_name', 'new_folder_name')  # 重命名文件夹
    box.delete_folder('folder_name')                         # 删除文件夹
 
-``Folder`` 实例也提供了 ``rename`` 和 ``delete`` 方法，不要问为什么没有 ``create`` 方法，因为俺觉得不合适：
+``Folder`` 实例也提供了 :py:meth:`~imap_easybox.folder.Folder.rename` 和 :py:meth:`~imap_easybox.folder.Folder.delete`
+方法，不要问为什么没有 ``create`` 方法，因为觉得不合适，😊：
 
 .. code-block:: python
 
@@ -84,10 +85,11 @@
 搜索邮件
 ---------------
 
-:py:attr:`imap_easybox.Fold.mails` 会返回文件夹内的所有邮件，但有时候我们想要根据条件搜索邮件，可以调用 ``folder.search``
-方法，返回 ``Mail`` 实例构成的列表。 ``folder.search`` 支持通过关键字参数传递搜索条件，也可以直接传入原生的（即
-传入 :py:class:`imaplib.IMAP4` 的 :py:meth:`~imaplib.IMAP4.search` 方法）搜索字符串，所有条件可参
-考 `RFC3501 <https://www.rfc-editor.org/rfc/rfc3501#section-6.4.4>`_, 不过是否生效还要看服务器是否支持。
+``Folder`` 实例的 :py:attr:`~imap_easybox.folder.Folder.mails` 特性会返回文件夹内的所有邮件，但有时候我们想要根据条件搜索邮件，可以调
+用 ``Folder`` 实例的 :py:meth:`~imap_easybox.folder.Folder.search` 方法，返回 :py:class:`~imap_easybox.email.Mail` 实例构成的
+列表。 :py:meth:`~imap_easybox.folder.Folder.search` 方法可以通过关键字参数传递搜索条件，也可以直接传入原生的（即传
+入 :py:class:`imaplib.IMAP4` 的 :py:meth:`~imaplib.IMAP4.search` 方法）搜索字符串，所有条件可参考
+`RFC3501 <https://www.rfc-editor.org/rfc/rfc3501#section-6.4.4>`_, 不过是否生效还要看服务器是否支持。
 
 **关键字参数**
 
@@ -104,4 +106,3 @@
 如果需要 `OR`，或者 `NOT` 的关系，则只能使用原生的搜索字符串。
 
 **原生字符串**
-
