@@ -64,3 +64,4 @@
 
    inbox_folder.rename('new_folder_name')  # 重命名文件夹
    inbox_folder.delete()                   # 删除该文件夹
+
