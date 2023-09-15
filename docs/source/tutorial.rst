@@ -58,9 +58,50 @@
    box.rename_folder('old_folder_name', 'new_folder_name')  # 重命名文件夹
    box.delete_folder('folder_name')                         # 删除文件夹
 
-``Folder`` 实例也提供了 ``rename`` 和 ``delete`` 方法：
+``Folder`` 实例也提供了 ``rename`` 和 ``delete`` 方法，不要问为什么没有 ``create`` 方法，因为俺觉得不合适：
 
 .. code-block:: python
 
    inbox_folder.rename('new_folder_name')  # 重命名文件夹
    inbox_folder.delete()                   # 删除该文件夹
+
+邮件标志操作
+-------------------------
+
+所谓标志，就是比如什么已读，已删除之类的标记，根据 `RFC2060 <https://datatracker.ietf.org/doc/html/rfc2060.html#section-6.4.4>`_，
+目前支持6个标签的设置，分别是 ``Seen``, ``Flagged``, ``Answered``, ``Draft``, ``Deleted``, ``Recent``，
+
+所有方法中的参数不区分大小写：
+
+.. code-block:: python
+
+    # 参数可以是逗号或空格分隔的多个标签组成的字符串，也可以是列表
+    flags = mail.flags                          # 查看邮件当前标签,返回['Seen', 'Flagged', ...]
+    mail.add_flags('Seen')                      # 添加已读标签
+    mail.set_flags('Flagged, Answered')         # 设置邮件标签为已标记和已回复，已有标记会被清除
+    mail.remove_flags(['Flagged', 'Answered'])  # 删除邮件的已标记和已回复标记
+
+搜索邮件
+---------------
+
+:py:attr:`imap_easybox.Fold.mails` 会返回文件夹内的所有邮件，但有时候我们想要根据条件搜索邮件，可以调用 ``folder.search``
+方法，返回 ``Mail`` 实例构成的列表。 ``folder.search`` 支持通过关键字参数传递搜索条件，也可以直接传入原生的（即
+传入 :py:class:`imaplib.IMAP4` 的 :py:meth:`~imaplib.IMAP4.search` 方法）搜索字符串，所有条件可参
+考 `RFC3501 <https://www.rfc-editor.org/rfc/rfc3501#section-6.4.4>`_, 不过是否生效还要看服务器是否支持。
+
+**关键字参数**
+
+.. code-block:: python
+
+    # 按主题搜索
+    mails = inbox_folder.search(subject='test')
+    # 按发件人和邮件标志搜索，from条件比较特殊，因为和python关键字冲突，所以后面要加一个下划线
+    mails = inbox_folder.search(from_='imap.mail.com', seen=True)
+    # 按日期搜索，注意日期需要按照%d-%b-%Y的格式
+    mails = inbox_folder.search(on='13-Aug-2023')
+
+所有 `Flag` 标志和接收单个参数的条件都可以做为关键字参数，`Flag` 标志设置为 `bool` 值。多个关键字参数是 `AND` 的关系。
+如果需要 `OR`，或者 `NOT` 的关系，则只能使用原生的搜索字符串。
+
+**原生字符串**
+
