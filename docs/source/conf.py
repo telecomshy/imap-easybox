@@ -22,7 +22,8 @@ release = '0.1.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    'sphinx_rtd_theme'
 ]
 
 intersphinx_mapping = {'python': ('https://docs.python.org/3.11', None)}
