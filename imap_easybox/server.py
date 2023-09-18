@@ -24,7 +24,7 @@ class ImapEasyBox:
         ssl: bool, default True
             为 ``True``, 则内部使用 :class:`imaplib.IMAP4`，否则使用 :class:`imaplib.IMAP4_SSL` 创建实例
         kwargs:
-            任意关键字参数，会透传给 :class:`imaplib.IMAP4` 构造函数
+            任意关键字参数，会透传给 :class:`imaplib.IMAP4` 或 :class:`imaplib.IMAP4_SSL` 构造函数
 
         Attributes
         ----------
