@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (imap-box)" project-jdk-type="Python SDK" />
+  <component name="Black">
+    <option name="executionMode" value="BINARY" />
+    <option name="pathToExecutable" value="D:\programs\Anaconda3\Scripts\black.exe" />
+    <option name="sdkUUID" value="c66c755c-5237-41e0-b521-a9e54474a8a0" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (imap_box)" project-jdk-type="Python SDK" />
 </project>

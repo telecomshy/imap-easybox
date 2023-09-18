@@ -24,10 +24,12 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
-    'sphinx_rtd_theme'
+    'sphinx_rtd_theme',
+    "sphinx.ext.autosectionlabel",
 ]
 
 intersphinx_mapping = {'python': ('https://docs.python.org/3.11', None)}
+autosectionlabel_prefix_document = True
 templates_path = ['_templates']
 exclude_patterns = []
 
