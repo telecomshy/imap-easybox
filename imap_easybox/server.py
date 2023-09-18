@@ -3,37 +3,34 @@ from typing import Union
 from .folder import Folder, FoldList
 from .utils import imap_utf7_encode, imap_utf7_decode
 
-"""
-server模块
-"""
-
 
 class ImapEasyBox:
-    """
-    主要模块
-
-    :Example:
-
-    >>> from imap_easybox import ImapEasyBox
-    >>> box = ImapEasyBox(host='host.com', port=993)
-    """
     server: Union[imaplib.IMAP4, imaplib.IMAP4_SSL, None]
 
     def __init__(self, host: str, port=993, user: str | None = None, password: str | None = None, ssl: bool = True,
                  **kwargs):
+        """创建imap服务器实例
+
+        Parameters
+        ----------
+        host : str
+            服务器域名
+        port : int, default 993
+            服务器端口，默认为993
+        user: str, default None
+            用户名，也可以稍后在调用 ``login`` 方法时指定
+        password: str, default None
+            密码，也可以稍后在调用 ``login`` 方法时指定
+        ssl: bool, default True
+            为 ``True``, 则内部使用 :class:`imaplib.IMAP4`，否则使用 :class:`imaplib.IMAP4_SSL` 创建实例
+        kwargs:
+            任意关键字参数，会透传给 :class:`imaplib.IMAP4` 构造函数
+
+        Attributes
+        ----------
+
         """
-        :param host: 邮箱服务器域名
-        :type host: str
-        :param port: 端口号
-        :type port: int
-        :param user: 用户名
-        :type user: str
-        :param password: 密码
-        :type password: str
-        :param ssl: 是否启用ssl协议
-        :type ssl: bool
-        :param kwargs: 其它任何关键字参数，透传给`imaplib`初始函数
-        """
+
         self.host = host
         self.port = port
         self.user = user
@@ -46,13 +43,17 @@ class ImapEasyBox:
 
     def login(self, user: str | None = None, password: str | None = None):
         """
-        登陆，登录以后会自动获取所有文件夹名称
+        登陆邮箱
 
-        :param user: 用户名
-        :param password: 密码
-        :return: None
+        Parameters
+        ----------
+        user:
+        password
+
+        Returns
+        -------
+
         """
-
         if user is None:
             user = self.user
         if password is None:

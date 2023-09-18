@@ -7,4 +7,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PyDocumentationSettings">
+    <option name="format" value="NUMPY" />
+    <option name="myDocStringFormat" value="NumPy" />
+  </component>
+  <component name="ReSTService">
+    <option name="DOC_DIR" value="D:\projects\开发项目\imap-box\docs\source" />
+  </component>
 </module>

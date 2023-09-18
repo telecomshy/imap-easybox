@@ -23,6 +23,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.napoleon',
     'sphinx_rtd_theme'
 ]
 
@@ -40,3 +41,6 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 # master_doc = "contents"
+
+# napoleon插件配置
+napoleon_include_init_with_doc = True
