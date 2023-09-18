@@ -1,10 +1,10 @@
 imap\_easybox package
 =====================
 
-imap\_easybox.email module
---------------------------
+imap\_easybox.server module
+---------------------------
 
-.. automodule:: imap_easybox.email
+.. automodule:: imap_easybox.server
    :members:
    :undoc-members:
    :show-inheritance:
@@ -17,10 +17,10 @@ imap\_easybox.folder module
    :undoc-members:
    :show-inheritance:
 
-imap\_easybox.server module
----------------------------
+imap\_easybox.email module
+--------------------------
 
-.. automodule:: imap_easybox.server
+.. automodule:: imap_easybox.email
    :members:
    :undoc-members:
    :show-inheritance:

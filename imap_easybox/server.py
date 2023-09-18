@@ -5,32 +5,49 @@ from .utils import imap_utf7_encode, imap_utf7_decode
 
 
 class ImapEasyBox:
+    """登录imap服务器，对邮箱内的文件夹进行操作
+
+    Parameters
+    ----------
+    host : str
+        服务器域名
+    port : int, default 993
+        服务器端口，默认为993
+    user: str, default None
+        用户名，也可以稍后在调用 ``login`` 方法时指定
+    password: str, default None
+        密码，也可以稍后在调用 ``login`` 方法时指定
+    ssl: bool, default True
+        为 ``True``, 则内部使用 :class:`imaplib.IMAP4`，否则使用 :class:`imaplib.IMAP4_SSL` 创建实例
+    kwargs:
+        任意关键字参数，会透传给 :class:`imaplib.IMAP4` 或 :class:`imaplib.IMAP4_SSL` 构造函数
+
+    Examples
+    ----------
+    可以传入用户名，密码，登录时候无须再次输入
+
+    >>> box = ImapEasyBox(host='mail.imap.com', port=993, user='username', password='password')
+    >>> box.login()
+
+    也可以延迟输入用户名密码:
+
+    >>> box = ImapEasyBox(host='mail.imap.com', port=993)
+    >>> box.login(user='username', password='password')
+
+    调用 ``quit`` 方法退出:
+
+    >>> box.quit()
+
+    可以使用上下文管理器:
+
+    >>> with ImapEasyBox(host='mail.imap.com', port=993, user='username', password='password') as box:
+    ...     ...
+
+    """
     server: Union[imaplib.IMAP4, imaplib.IMAP4_SSL, None]
 
     def __init__(self, host: str, port=993, user: str | None = None, password: str | None = None, ssl: bool = True,
                  **kwargs):
-        """创建imap服务器实例
-
-        Parameters
-        ----------
-        host : str
-            服务器域名
-        port : int, default 993
-            服务器端口，默认为993
-        user: str, default None
-            用户名，也可以稍后在调用 ``login`` 方法时指定
-        password: str, default None
-            密码，也可以稍后在调用 ``login`` 方法时指定
-        ssl: bool, default True
-            为 ``True``, 则内部使用 :class:`imaplib.IMAP4`，否则使用 :class:`imaplib.IMAP4_SSL` 创建实例
-        kwargs:
-            任意关键字参数，会透传给 :class:`imaplib.IMAP4` 或 :class:`imaplib.IMAP4_SSL` 构造函数
-
-        Attributes
-        ----------
-
-        """
-
         self.host = host
         self.port = port
         self.user = user
