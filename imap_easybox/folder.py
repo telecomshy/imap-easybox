@@ -6,7 +6,24 @@ if TYPE_CHECKING:
     from .server import ImapEasyBox
 
 
-class FoldList(UserList):
+class FolderList(UserList):
+    """
+    覆盖了 :class:`collections.UserList` 的 ``__getitem__`` 方法，可通过整数或者文件夹名称选择文件夹，在内部会调用
+    :meth:`.ImapEasyBox.select` 方法选定该文件夹
+
+    Examples
+    ----------
+
+    >>> folders
+    [Folder<inbox>, Folder<垃圾箱>, ...]
+    >>> inbox = folders[0]
+    >>> inbox
+    Folder<inbox>
+    >>> inbox = folders['inbox']
+    >>> inbox
+    Folder<inbox>
+
+    """
     def __getitem__(self, item):
         if isinstance(item, str):
             for folder in self:

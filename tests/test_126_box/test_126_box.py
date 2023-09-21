@@ -50,9 +50,14 @@ class TestFolder:
         assert "Folder<新测试文件夹>" not in str(mail_box.folders)
         assert test_folder.folder_name is None
 
-    def test_search_mail(self, mail_box):
+    def test_search_mail_by_keyword(self, mail_box):
         inbox = mail_box.select('inbox')
         mails = inbox.search(subject="new")
+        assert "new" in mails[0].subject
+
+    def test_search_mail_by_raw_str(self, mail_box):
+        inbox = mail_box.select('inbox')
+        mails = inbox.search('(SUBJECT "new")')
         assert "new" in mails[0].subject
 
 

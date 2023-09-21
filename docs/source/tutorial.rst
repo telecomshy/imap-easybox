@@ -88,8 +88,11 @@
 ``Folder`` 实例的 :py:attr:`~imap_easybox.folder.Folder.mails` 特性会返回文件夹内的所有邮件，但有时候我们想要根据条件搜索邮件，可以调
 用 ``Folder`` 实例的 :py:meth:`~imap_easybox.folder.Folder.search` 方法，返回 :py:class:`~imap_easybox.email.Mail` 实例构成的
 列表。 :py:meth:`~imap_easybox.folder.Folder.search` 方法可以通过关键字参数传递搜索条件，也可以直接传入原生的（即传
-入 :py:class:`imaplib.IMAP4` 的 :py:meth:`~imaplib.IMAP4.search` 方法）搜索字符串，所有条件可参考
-`RFC3501 <https://www.rfc-editor.org/rfc/rfc3501#section-6.4.4>`_, 不过是否生效还要看服务器是否支持。
+入 :py:class:`imaplib.IMAP4` 的 :py:meth:`~imaplib.IMAP4.search` 方法）搜索字符串。
+
+所有搜索条件参考 `RFC3501 <https://www.rfc-editor.org/rfc/rfc3501#section-6.4.4>`_, 不过是否生效还要看服务器是否支持。
+
+另外，如果搜索条件包含中文，可以传入 ``encoding`` 参数，不过也依赖服务器是否支持。
 
 **关键字参数**
 
@@ -106,3 +109,29 @@
 如果需要 `OR`，或者 `NOT` 的关系，则只能使用原生的搜索字符串。
 
 **原生字符串**
+
+`redbox <https://github.com/Miksus/red-box>`_ ，`imap_tools <https://github.com/ikvk/imap_tools>`_ 除了
+关键字参数，还提供了专门的搜索语法，也支持原生的搜索语法，所谓原生搜索语法，就是协议支持的，可以直接传入 :meth:`imaplib.IMAP4.search`
+方法的字符串参数。其实原生的搜索语句也不是很复杂，所以就偷个懒，没有提供专门搜索语法，只支持原生搜索语句。
+
+原生搜索语句规则基本上就是，参数用双引号包含起来，整个搜索条件用圆括号包含起来，如果是类似 *Flag* 之类，没有参数的搜索条件，
+则直接上圆括号，下面是几个例子：
+
+.. code-block:: python
+
+    # 搜索主题包含test的邮件
+    mails = inbox_folder.search('(SUBJECT "test")')
+
+    # 搜索邮件标志为已读且来自imap.mail.com的邮件
+    mails = inbox_folder.search('((FROM "imap.mail.com") (SEEN))')
+
+    # 最外层的圆括号可要可不要
+    mails = inbox_folder.search('(FROM "imap.mail.com") (SEEN)')
+
+    # 按或的关系进行搜索
+    mails = inbox_folder.search('OR (FROM "imap.mail.com") (SEEN)')
+
+    # 按否的关系进行搜索
+    mails = inbox_folder.search('NOT (FROM "imap.mail.com") (SEEN)')
+
+要注意的是，搜索条件的参数，如果包含字符串，比如 ``From "imap.mail.com"`` 中的 ``imap.mail.com`` 部分，要用双引号，不能用单引号。

@@ -1,6 +1,6 @@
 import imaplib
 from typing import Union
-from .folder import Folder, FoldList
+from .folder import Folder, FolderList
 from .utils import imap_utf7_encode, imap_utf7_decode
 
 
@@ -41,7 +41,7 @@ class ImapEasyBox:
     可以使用上下文管理器:
 
     >>> with ImapEasyBox(host='mail.imap.com', port=993, user='username', password='password') as box:
-    ...     ...
+    ...     pass
 
     """
     server: Union[imaplib.IMAP4, imaplib.IMAP4_SSL, None]
@@ -59,16 +59,14 @@ class ImapEasyBox:
         self._folders = None
 
     def login(self, user: str | None = None, password: str | None = None):
-        """
-        登陆邮箱
+        """登陆邮箱
 
         Parameters
         ----------
-        user:
-        password
-
-        Returns
-        -------
+        user: str, default None
+            用户名，如果已指定，则可忽略
+        password: str, default None
+            密码，如果已指定，则可忽略
 
         """
         if user is None:
@@ -84,6 +82,7 @@ class ImapEasyBox:
         self._update_folders()
 
     def quit(self):
+        """退出登录"""
         # 需要先选择select邮箱，然后再close，否则会抛出错误
         try:
             self.server.close()
@@ -103,16 +102,45 @@ class ImapEasyBox:
         self.quit()
 
     def select(self, folder_name: str) -> Folder:
+        """选择文件夹
+
+        登录以后，必须先选择一个文件夹
+
+        Parameters
+        ----------
+        folder_name: str
+            文件夹名称
+
+        Returns
+        -------
+        Folder
+            返回一个 :class:`Folder` 实例
+        """
         folder_raw_name = self._folders[folder_name.lower()]
         self.server.select(folder_raw_name)
         return Folder(folder_name, self)
 
     @property
-    def folders(self) -> FoldList:
-        return FoldList(Folder(folder_name, self) for folder_name in self._folders.keys())
+    def folders(self) -> FolderList:
+        """FolderList: 返回邮箱当前所有文件夹
+
+        Examples
+        ---------
+
+        >>> folders = box.folders
+        >>> folders
+        [Folder<inbox>, Folder<垃圾箱>, ...]
+
+        返回 :class:`.FolderList` 实例，:class:`.FolderList` 可通过整数或者文件夹名称选择文件夹
+        """
+        return FolderList(Folder(folder_name, self) for folder_name in self._folders.keys())
 
     def _update_folders(self):
-        """更新文件夹列表"""
+        """更新文件夹列表
+
+        获取当前所有文件夹，构成一个字典，键是解析后的文件夹名称，值是文件夹的原始名称，保存到 ``_folders`` 属性中
+
+        """
         self._folders = {}
 
         # list返回的结果是('OK', [b'(\\Marked) "/" "INBOX"', b'(\\Marked) "/" "&XfJT0ZAB-"'])
@@ -126,14 +154,14 @@ class ImapEasyBox:
             self._folders[folder_name_key] = folder_name_val
 
     def create_folder(self, folder_name: str):
-        """创建文件夹"""
+        """创建文件夹，创建成功更新邮箱所有文件夹"""
         # 创建已存在的文件夹返回('NO', [b'CREATE Folder exist']
         folder_name = imap_utf7_encode(folder_name)
         self.server.create(folder_name)
         self._update_folders()
 
     def rename_folder(self, old_folder_name: str, new_folder_name: str):
-        """修改文件夹名称"""
+        """修改指定文件夹名称，修改成功更新邮箱所有文件夹"""
         try:
             old_folder_name = self._folders[old_folder_name.lower()]
         except KeyError:
@@ -144,7 +172,7 @@ class ImapEasyBox:
         self._update_folders()
 
     def delete_folder(self, folder_name: str):
-        """删除文件夹"""
+        """删除指定文件夹，删除成功更新邮箱所有文件夹"""
         # 删除不存在的文件夹会返回('NO', [b'DELETE Folder not exist'])
         try:
             folder_name = self._folders[folder_name.lower()]
