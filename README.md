@@ -1,5 +1,9 @@
 # Imap Easy Box
 
+- [文档](https://imap-easybox.readthedocs.io)
+- [源码](https://github.com/telecomshy/imap-easybox)
+- [发布](https://pypi.org/project/imap-easybox/)
+
 ## 简单介绍
 imapbox是基于python内置imaplib，方便收取邮件，
 读取邮件内容。 类似的三方包有[redbox](https://github.com/Miksus/red-box)，
