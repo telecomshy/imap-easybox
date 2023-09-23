@@ -79,7 +79,7 @@ class ImapEasyBox:
         # 用户名密码错误抛出异常imaplib.IMAP4.error: b'LOGIN failure, invalid username/password'
         # 邮箱地址错误抛出异常imaplib.IMAP4.error: LOGIN command error: BAD [b'LOGIN failure, domain is disable.']
         self.server.login(user, password)
-        self._update_folders()
+        self.update_folders()
 
     def quit(self):
         """退出登录"""
@@ -135,11 +135,11 @@ class ImapEasyBox:
         """
         return FolderList(Folder(folder_name, self) for folder_name in self._folders.keys())
 
-    def _update_folders(self):
+    def update_folders(self):
         """更新文件夹列表
 
-        获取当前所有文件夹，构成一个字典，键是解析后的文件夹名称，值是文件夹的原始名称，保存到 ``_folders`` 属性中
-
+        获取当前所有文件夹，更新内部 ``_folders`` 属性，``_folders`` 是一个字典，键是解析后的文件夹名称，
+        值是文件夹的原始名称
         """
         self._folders = {}
 
@@ -158,7 +158,7 @@ class ImapEasyBox:
         # 创建已存在的文件夹返回('NO', [b'CREATE Folder exist']
         folder_name = imap_utf7_encode(folder_name)
         self.server.create(folder_name)
-        self._update_folders()
+        self.update_folders()
 
     def rename_folder(self, old_folder_name: str, new_folder_name: str):
         """修改指定文件夹名称，修改成功更新邮箱所有文件夹"""
@@ -169,7 +169,7 @@ class ImapEasyBox:
 
         new_folder_name = imap_utf7_encode(new_folder_name).decode('ascii')
         self.server.rename(old_folder_name, new_folder_name)
-        self._update_folders()
+        self.update_folders()
 
     def delete_folder(self, folder_name: str):
         """删除指定文件夹，删除成功更新邮箱所有文件夹"""
@@ -180,4 +180,4 @@ class ImapEasyBox:
             raise NameError(f"Folder<{folder_name}>不存在")
 
         self.server.delete(folder_name)
-        self._update_folders()
+        self.update_folders()

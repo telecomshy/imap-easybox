@@ -43,23 +43,34 @@ class Mail:
         return outputs
 
     @property
-    def content(self):
-        """返回一个字典"""
+    def content(self) -> dict:
+        """返回邮件所有内容构成的字典，结构如下：
+
+        .. code-block::
+
+                content = {
+                    "text_body": ...,
+                    "html_body": ...,
+                    "html_encoding": ...,
+                    "attachments": [...],
+                    "images": [...]
+                }
+        """
         if self._content is None:
             self._content = parse_raw_mail(self.raw_mail)
         return self._content
 
     @property
-    def raw_mail(self):
-        """返回邮件原始内容，是email包的Message对象"""
+    def raw_mail(self) -> email.message.Message:
+        """返回邮件原始的 :class:`~email.message.Message` 对象"""
         if self._raw_mail is None:
             data = self._fetch("(RFC822)")
             self._raw_mail = email.message_from_string(data[0])
         return self._raw_mail
 
     @property
-    def headers(self):
-        """获取邮件元信息"""
+    def headers(self) -> dict:
+        """返回邮件元信息"""
         if self._headers is None:
             self._headers = {k.lower(): v for k, v in self.raw_mail.items()}
         return self._headers
@@ -72,39 +83,50 @@ class Mail:
         return value
 
     @property
-    def subject(self):
+    def subject(self) -> str:
+        """返回邮件的主题"""
         return self._get_mail_info("subject")
 
     @property
-    def sender(self):
+    def sender(self) -> str:
+        """返回邮件的发件人"""
         return self._get_mail_info("sender")
 
     @property
-    def from_(self):
+    def from_(self) -> str:
+        """返回邮件发件人相关信息"""
         return self._get_mail_info("from")
 
     @property
-    def to(self):
+    def to(self) -> str:
+        """返回邮件收件人"""
         return self._get_mail_info("to")
 
     @property
-    def date(self):
+    def date(self) -> str:
+        """返回邮件发送日期，日期格式为 ``%Y-%m-%d %H:%M:%S``"""
         d, b, y, t, z = self.headers["date"].split(',')[1].split()[:5]
         dt = datetime.strptime(f"{d} {b} {y} {t} {z}", "%d %b %Y %H:%M:%S %z")
         return dt.astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
     @property
-    def text_body(self):
-        """获取邮件的文本内容"""
+    def text_body(self) -> str:
+        """返回邮件的文本内容"""
         return self.content.get("text_body")
 
     @property
-    def html_body(self):
-        """获取邮件html的内容"""
+    def html_body(self) -> str:
+        """返回邮件html的内容"""
         return self.content.get("html_body")
 
-    def save_html(self, save_path='.'):
-        """保存邮件为html文件，图片编码成base64格式嵌入"""
+    def save_html(self, save_path: str = '.'):
+        """将邮件保存为html文件，图片编码成base64格式嵌入
+
+        Parameters
+        ----------
+        save_path: str
+            邮件保存目录
+        """
         html_body = self.html_body
 
         if not html_body:
@@ -124,12 +146,18 @@ class Mail:
         html_path.write_text(html_body, self.content["html_encoding"])
 
     @property
-    def attachments(self):
+    def attachments(self) -> list:
         """返回一个列表，元素是字典，字典的键是附件名称，值是附件二进制内容"""
         return self.content["attachments"]
 
-    def save_attachments(self, save_path='.'):
-        """保存所有附件，返回附件路径组成的列表"""
+    def save_attachments(self, save_path: str = '.'):
+        """保存所有附件，返回附件路径组成的列表
+
+        Parameters
+        ----------
+        save_path: str, default '.'
+            附件保存目录，默认为当前目录
+        """
         save_path = Path(save_path)
         Path.mkdir(save_path, exist_ok=True)
 
@@ -142,8 +170,14 @@ class Mail:
 
         return pathes
 
-    def save(self, filename=None):
-        """将邮件保存为eml文件"""
+    def save(self, filename: str = None):
+        """将邮件保存为eml文件
+
+        Parameters
+        ----------
+        filename: str, default None
+            邮件名称
+        """
         if filename is None:
             filename = f"{self.mail_id}.eml"
 
@@ -158,6 +192,7 @@ class Mail:
 
     @property
     def flags(self) -> list[str]:
+        """返回邮件当前所有flag标志构成的列表"""
         # self._fetch('FLAGS')的结果为['1 (FLAGS (\\Seen \\Flagged))']或者['1 (FLAGS ())']
         # 转换成'1 FLAGS \\Seen \\Flagged'或者'1 FLAG  '
         flags = self._fetch('FLAGS')[0].replace('(', '').replace(')', '').replace('\\', '')
@@ -182,20 +217,44 @@ class Mail:
         flags = ' '.join([rf'\{flag}' for flag in flags])
         self.server.store(self.mail_id, command, flags)
 
-    def set_flags(self, flags):
-        """设置邮件标识，可用标识有seen, flagged, answered, draft, deleted"""
+    def set_flags(self, flags: list | str):
+        """设置邮件标识，可用标识有seen, flagged, answered, draft, deleted
+
+        Parameters
+        ----------
+        flags: list or str
+            设置邮件flag标志，可以是标记构成的列表，或者多个标记组成的字符串，标志之间用逗号或空格分隔
+        """
         self._store_flags('FLAGS', flags)
 
-    def add_flags(self, flags):
-        """添加邮件标识"""
+    def add_flags(self, flags: list | str):
+        """添加邮件标识，可用标识有seen, flagged, answered, draft, deleted
+
+        Parameters
+        ----------
+        flags: list or str
+            设置邮件flag标志，可以是标记构成的列表，或者多个标记组成的字符串，标志之间用逗号或空格分隔
+        """
         self._store_flags('+FLAGS', flags)
 
-    def remove_flags(self, flags):
-        """移除邮件标识"""
+    def remove_flags(self, flags: list | str):
+        """删除邮件标识，可用标识有seen, flagged, answered, draft, deleted
+
+        Parameters
+        ----------
+        flags: list or str
+            设置邮件flag标志，可以是标记构成的列表，或者多个标记组成的字符串，标志之间用逗号或空格分隔
+        """
         self._store_flags('-FLAGS', flags)
 
     def move_to(self, folder_name):
-        """将邮件移动到指定文件夹"""
+        """将邮件移动到指定文件夹
+
+        Parameters
+        ----------
+        folder_name: str
+            目的文件夹名称
+        """
         self.server.copy(self.mail_id, self.box._folders[folder_name])
         self.add_flags('deleted')
 

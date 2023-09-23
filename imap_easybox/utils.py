@@ -23,8 +23,19 @@ def decode_mail_header(header):
     return values
 
 
-def parse_raw_mail(raw_mail: Message):
-    """递归解析原始邮件"""
+def parse_raw_mail(raw_mail: Message) -> dict:
+    """递归解析原始邮件，返回邮件内容组成的字典:
+
+    .. code-block:: python
+
+        content = {
+            "text_body": ...,
+            "html_body": ...,
+            "html_encoding": ...,
+            "attachments": [...],
+            "images": [...]
+        }
+    """
 
     content = {
         "text_body": None,
@@ -70,13 +81,20 @@ def parse_raw_mail(raw_mail: Message):
     return content
 
 
-def image_to_base64(image: Union[str, bytes], encoding):
+def image_to_base64(image: Union[str, bytes], encoding) -> str:
     """
     将图片转换成base64编码
 
-    :param image: 字节码或者字符串，如果是字符串，表示图片的路径
-    :param encoding: 字符串编码
-    :return: base64编码字符串
+    Parameters
+    ----------
+    image: str or bytes
+        字节码或者字符串，如果是字符串，表示图片的路径
+    encoding: str
+        字符串编码
+
+    Returns
+    -------
+        base64编码的字符串
     """
 
     if isinstance(image, str):
@@ -86,12 +104,11 @@ def image_to_base64(image: Union[str, bytes], encoding):
     return image_base64
 
 
-def imap_utf7_encode(text: str):
+def imap_utf7_encode(text: str) -> bytes:
     """将字符串转换成imap支持的utf7编码，并将+号替换成&号"""
     return text.encode('utf7').replace(b'+', b'&')
 
 
-def imap_utf7_decode(bytes_: bytes):
+def imap_utf7_decode(bytes_: bytes) -> str:
     """将imap的字节编码转换成字符串，imap是utf7格式，并将+号替换成&号"""
     return bytes_.replace(b'&', b'+').decode('utf7')
-

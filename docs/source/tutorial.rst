@@ -108,6 +108,8 @@
 所有 `Flag` 标志和接收单个参数的条件都可以做为关键字参数，`Flag` 标志设置为 `bool` 值。多个关键字参数是 `AND` 的关系。
 如果需要 `OR`，或者 `NOT` 的关系，则只能使用原生的搜索字符串。
 
+.. _raw search string:
+
 **原生字符串**
 
 `redbox <https://github.com/Miksus/red-box>`_ ，`imap_tools <https://github.com/ikvk/imap_tools>`_ 除了
