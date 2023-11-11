@@ -105,7 +105,11 @@ class Mail:
     @property
     def date(self) -> str:
         """返回邮件发送日期，日期格式为 ``%Y-%m-%d %H:%M:%S``"""
-        d, b, y, t, z = self.headers["date"].split(',')[1].split()[:5]
+        D = self.headers["date"]
+        D = D if not "," in D else D.split(",")[1]  # weekday off
+        d, b, y, t, z = D.split()[:5]
+        if not z or not z[0] in {"-", "+"}:  # no tz offset in date
+            z = "+0000"
         dt = datetime.strptime(f"{d} {b} {y} {t} {z}", "%d %b %Y %H:%M:%S %z")
         return dt.astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
